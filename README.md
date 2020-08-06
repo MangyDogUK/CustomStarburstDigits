@@ -1,4 +1,6 @@
-[img]https://github.com/MangyDogUK/CustomStarburstDigits/blob/master/Display.JPG[/img]
+
+[<img src="https://github.com/MangyDogUK/CustomStarburstDigits/blob/master/Display.JPG">]
+
 Custom Modular Starburst Digit
  
 A Custom designed modular Starburst Digit, inspired by the displays on the Hornet fighter jet. 
