@@ -1,5 +1,5 @@
 
-[<img src="https://github.com/MangyDogUK/CustomStarburstDigits/blob/master/Display.JPG">]
+<img src="https://github.com/MangyDogUK/CustomStarburstDigits/blob/master/Display.JPG">
 
 Custom Modular Starburst Digit
  
