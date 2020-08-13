@@ -96,7 +96,7 @@ public:
 				}
 			while (true)
 				{
-					if (buffer[c] != '\n')
+					if (text[c] != '\n') // part of the bug now corrected
 						{
 							buffer[2 + c] = text[c];
 							c++;
@@ -144,6 +144,7 @@ public:
 			buffer[c + 2] = checkSum << 0;
 
 			uint8_t offset = 0;
+
 			for (int i = 2; i <(c + 3 + offset); i++) //inject ESC in message and checksum if special bytes were used
 				{
 					if ((buffer[i] == startFrame && buffer[i - 1] != ESC)
@@ -160,6 +161,8 @@ public:
 						}
 
 				}
+
+			buffer[c + 3 + offset] = endFrame;  // fixed, turns out I didnt have an end frame byte set D: Not sure how my code worked at all!
 
 			for (int i = 0; i <(c + 4 + offset); i++)
 				{
@@ -241,4 +244,3 @@ void loop()
 
 		delay(1000);
 	}
-
