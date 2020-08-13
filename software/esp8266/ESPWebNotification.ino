@@ -25,7 +25,7 @@ const char* password = "love-sex-secret-god-password-hack_the_planet"; //Place y
 #include <ArduinoJson.h>
 //////////////////////////////////////////////////////////////////////////////////////////
 #define API_KEY "KeysKEYS-EVERYWHERE"  // your google apps API Token
-#define CHANNEL_ID "YOURE ID NOT MINE" // makes up the url of channel
+#define CHANNEL_ID "YOUR ID NOT MINE" // makes up the url of channel
 //////////////////////////////////////////////////////////////////////////////////////////
 
 WiFiClientSecure client;
