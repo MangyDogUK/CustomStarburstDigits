@@ -31,28 +31,20 @@ const char* password = "love-sex-secret-god-password-hack_the_planet"; //Place y
 WiFiClientSecure client;
 YoutubeApi api(API_KEY, client);
 
-
-
 long subs = 0;
-
-
-
-
 
 
 #define bufferSize 65
 
 
-
-
 class displayDigits
 	{
 //special serial bytes following ACSII codes to keep some standard to follow.....
-#define startFrame 0x02 //acsii code STX
-#define endFrame 0x03 //acsii code ETX
-#define ESC 0x1B //acsii code
-#define ACK 0x06 //acsii code
-#define NAK 0x15//acsii code
+#define startFrame 0x02 //ascii code STX
+#define endFrame 0x03 //ascii code ETX
+#define ESC 0x1B //ascii code
+#define ACK 0x06 //ascii code
+#define NAK 0x15//ascii code
 
 private:
 	char buffer[bufferSize]; //65 being arbitrary 60 characters plus  special bytes ... Raise it if you like, but be sure to raise it in the arduino sketch as well
@@ -247,6 +239,6 @@ void loop()
 		myDigits.setText(false, buffer);
 		myDigits.write();
 
-		delay(500);
+		delay(1000);
 	}
 
