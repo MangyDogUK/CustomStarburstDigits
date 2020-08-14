@@ -247,20 +247,25 @@ void setup()
 		TCCR1B &= ~(1 << CS10);
 
 		TIMSK1 |= (1 << OCIE1A);  //Output compare eneabled
-		OCR1A = 10; //500ns trigger
+		OCR1A = 100; //10=500ns trigger
 		TCNT1 = 0; //reset to zero
 
 		interrupts();             // enable all interrupts
 //////////////////////////////////////////////////////////////////////////////////
-		String hw = "--= WELCOME =--";
+		String hw = "--=  Hello  =--";
 		for (int i = 0; i < digitCnt; i++)
 			{
 				charBuffer[digitCnt - i - 1] = hw[i];
 			}
 		encodeStream();
 		delay(1000);
+
+		encodeStream();
+		delay(2000);
+
 		Serial.flush();    //clean out the serial junk esp8266 dishes out on startup
 		delay(1000);
+
 	}
 
 //timer interrupt that runs the display
@@ -405,7 +410,8 @@ void getSerial()
 				//checksum check
 				//add up checksum this side
 				uint16_t checksum = 0; // to calculate
-				for (int c = 0; c < serialBuffCount - 3; c++) //-3 ignoring checksum and end frame bytes
+
+				for (int c = 0; c < length + 3; c++) //Length + \n + start frame + command byte = +3
 					{
 						if (serialBuffer[c] != ESC) //ignore escape bytes in checksum, as ignored in the generation
 							{
@@ -415,18 +421,54 @@ void getSerial()
 					}
 
 				//Reconstitute received checksum two bytes for 16bit int.
-				uint16_t checksumRe = serialBuffer[serialBuffCount - 3] << 8
-				    | serialBuffer[serialBuffCount - 2] << 0;
+				//Bug fix, before ESC wasnt handled in checksum bytes, now its captured and bytes offset.
+				//not the tidest of code but its working so far.
+				char buffer[15];
+
+				uint8_t readStart = length + 3;
+
+				uint8_t escOffset1 = 0;
+				if (serialBuffer[readStart] == ESC)
+					{
+//					sprintf(buffer, " off1 %i  ", serialBuffer[readStart]);
+//					dispDebug(buffer);
+//					delay(500);
+
+						escOffset1 = 1;
+					}
+
+				uint8_t escOffset2 = 0;
+				if (serialBuffer[readStart + 1 + escOffset1] == ESC)
+					{
+//						sprintf(buffer, " off2 %i  ", serialBuffer[readStart+1+escOffset1]);
+//						dispDebug(buffer);
+//						delay(500);
+
+						escOffset2 = 1;
+					}
+
+				uint8_t checkHIGH = serialBuffer[(readStart + escOffset1)];
+				uint8_t checkLOW =
+				    serialBuffer[(readStart + 1 + escOffset1 + escOffset2)];
+
+//						sprintf(buffer, " cs1 %i  ", checkHIGH);
+//						dispDebug(buffer);
+//						delay(500);
+//
+//						sprintf(buffer, " cs2 %i  ",  checkLOW);
+//						dispDebug(buffer);
+//						delay(500);
+
+				uint16_t checksumRe = checkHIGH << 8 | checkLOW << 0;
 				//Compare received against this side added up checksum
 
 				if (checksum != checksumRe)
 					{
 						uint16_t cs = checksumRe;
 
-						char buffer[15];
-						sprintf(buffer, " CS %i  ", checksumRe);
+						sprintf(buffer, " cs %i  ", cs);
 						dispDebug(buffer);
-						delay(500);
+						delay(1000);
 
 						//checksum failed resend packet
 						flush();
@@ -494,7 +536,7 @@ void getSerial()
 
 				if (serialBuffer[1] == 0xD0) //target led, code not written for this yet. But serial is fast enough that in theory you could run animations from host mcu
 					{
-
+// Write something interesting here that people might read!
 					}
 
 				failEnd: // if checks fail skips to here
